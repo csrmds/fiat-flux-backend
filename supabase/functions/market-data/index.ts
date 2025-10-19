@@ -12,6 +12,7 @@ serve(async (req) => {
 			headers: corsHeaders
 		});
 	}
+
 	try {
 		console.log('Market data function called');
 		// Get API key from environment
@@ -34,11 +35,16 @@ serve(async (req) => {
 		const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 		const supabase = createClient(supabaseUrl, supabaseKey);
 		// Parse request parameters
+		const body= await req.json();
 		const url = new URL(req.url);
-		const symbol = url.searchParams.get('symbol') || 'BTC/USD';
-		const interval = url.searchParams.get('interval') || '1day';
-		const start_date = url.searchParams.get('start_date');
-		const end_date = url.searchParams.get('end_date');
+		//const symbol = url.searchParams.get('symbol') || 'BTC/USD';
+		const symbol = body.symbol || 'BTC/BRL';
+		//const interval = url.searchParams.get('interval') || '1day';
+		const interval = body.interval || '1day';
+		//const start_date = url.searchParams.get('start_date');
+		const start_date = body.start_date;
+		//const end_date = url.searchParams.get('end_date');
+		const end_date = body.end_date;
 		console.log(`Fetching data for ${symbol} with interval ${interval}`);
 		// Build Twelve Data API URL
 		const twelveDataUrl = new URL('https://api.twelvedata.com/time_series');
